@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+	
+	
+	<meta name="viewport" content="width-device-width, initial-scale=1">
+	 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	 
+	 <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.3/jquery.mobile.min.css" />
+	 <script src="http://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.3/jquery.mobile.min.js"></script>
+
+
+	 <script>
+		function trimiteinfo() {
+			var dataObj={};
+			dataObj.Nume=$("#Nume").val();
+			dataObj.Prenume=$("#Prenume").val();
+			dataObj.Strada=$("#Strada").val();
+		
+		
+	
+		
+		//request de update al ownerului 
+		$.ajax({
+			type: "POST",
+			url: "http://lambert.go.ro/exemplu/ex.php",
+			data: {dataObj: JSON.stringify(dataObj)},
+			dataType: 'json',
+			success: function(respObj) {
+				alert(respObj.statusMsg);
+			},     
+			error: function(errorObj,errorStatus,errorMsg){
+				alert("Error connectiong to server: " + errorStatus + errorMsg);
+				
+			}
+		});	
+			
+	}
+		
+		
+		
+		
+	 </script>
+	 
+<script>
+//gasire informatii din tabel si afisare in div ascuns
+	function afiseaza() {
+			var dataObj={};
+			dataObj.Nume=$("#Nume").val();
+			dataObj.Prenume=$("#Prenume").val();
+			dataObj.Strada=$("#Strada").val();
+
+            $.ajax({
+                type: "POST",
+                url: "http://lambert.go.ro/exemplu/afiseazacomenzi.php",
+                data: {dataObj: JSON.stringify(dataObj)},
+                dataType: 'json',
+				success: function(respObj) {
+					if(respObj.status == "OK"){
+						// display info in form
+						var ownerInfo = {};
+						ownerInfo.Nume = respObj.Nume;
+						ownerInfo.Prenume = respObj.Prenume;
+						ownerInfo.Strada = respObj.Strada;
+						sessionStorage.setItem("OwnerInfo",JSON.stringify(ownerInfo));
+					
+
+						
+						location.href = "ex.html";
+						
+					} 
+					else {
+						alert(respObj.statusMsg);
+					}
+				},     
+				error: function(errorObj,errorStatus,errorMsg){
+					alert("Error connectiong to server: " + errorStatus + errorMsg);
+					
+				}
+			});	
+
+		}
+		
+	
+</script>
+<script>
+	$(document).ready(function() {
+			
+			var OwnerInfo = JSON.parse(sessionStorage.OwnerInfo); 
+		document.getElementById("rezultate1").innerHTML=OwnerInfo.Nume+" "+OwnerInfo.Prenume+" "+OwnerInfo.Strada;
+	//	document.getElementById("rezultate2").innerHTML=OwnerInfo.Prenume;
+	//document.getElementById("rezultate3").innerHTML=OwnerInfo.Strada;
+			
+		
+	});
+</script>
+	 
+	 
+	 
+	 
+	 
+</head>
+<body>
+<div data-role="page" id="pagina_comanda">
+	<div data-role="header">
+	comenzi
+	</div>
+	<div data-role="main" class="ui-contain">
+	<form method="POST" action="#">
+	<div class="ui-field-contain">
+		<label for="Nume">Nume</label>
+		<input type="text" name="Nume" id="Nume">
+		
+		<label for="Prenume">Prenume</label>
+		<input type="text" name="Prenume" id="Prenume">
+		
+		<label for="Strada">Strada</label>
+		<input type="text" name="Strada" id="Strada">
+		
+		<input type="button" value="trimite" onclick="trimiteinfo()">
+	</div>	
+	</form>
+	<a href="#"  onclick="afiseaza()" class="ui-btn ui-btn-inline ui-corner-all">Afisare comenzi</a>
+	<div id="rezultate1"> </div>
+	<div id="rezultate2"> </div>
+	<div id="rezultate3"> </div>
+	</div>
+	
+	<div data-role="footer">
+		2014
+	</div>
+</div>
+
+<div data-role="page" id="afiseaza">
+	<div data-role="header">
+	comenzi
+	</div>
+	<div data-role="main" class="ui-contain">
+	
+			
+	</div>
+	
+	<div data-role="footer">
+		2014
+	</div>
+</div>
+
+</body>
+<script>
+
+</script>
+
+</html>
